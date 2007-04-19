@@ -55,10 +55,7 @@ default_packages = [
         'bm'
         ]
 
-def __build_preamble(usepackages = None):
-    packages = default_packages;
-    if usepackages:
-        packages = usepackages;
+def __build_preamble(packages):
     preamble = '\documentclass{article}\n'
     for p in packages:
         preamble += "\usepackage{%s}\n" % p
@@ -93,7 +90,17 @@ def __write_output(infile, outdir, workdir = '.', prefix = '', size = 1):
                 os.remove(tempfile)
 
 
-def math2png(eqs, outdir, packages = [], prefix = '', size = 1):
+def math2png(eqs, outdir, packages = default_packages, prefix = '', size = 1):
+    """
+    Generate png images from $...$ style math environment equations.
+
+    Parameters:
+        eqs         - A list of equations
+        outdir      - Output directory for PNG images
+        packages    - Optional list of packages to include in the LaTeX preamble
+        prefix      - Optional prefix for output files
+        size        - Scale factor for output
+    """
     try:
         # Set the working directory
         workdir = tempfile.gettempdir()
