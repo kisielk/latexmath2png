@@ -1,5 +1,6 @@
-#!/usr/bin/python2.5
+#!/usr/bin/env python2.5
 from __future__ import with_statement # Until Python 2.6
+from optparse import OptionParser
 """
 Converts LaTeX math to png images.
 Run latexmath2png.py --help for usage instructions.
@@ -141,7 +142,29 @@ equation is allowed per line of text and each equation is rendered to a separate
 PNG image numbered sequentially from 1, with an optional prefix.
     """ % (os.path.split(sys.argv[0])[1])
 
-def main():
+def main(argv=None):
+    if argv is None:
+        argv = sys.argv[1:]
+
+    parser = Optionparser()
+
+    parser.add_option("-o", "--outdir", dest="outdir",
+            help="Write output PNG files to DIR", metavar="DIR")
+
+    parser.add_option("-p", "--packages", dest="packages",
+            help="Include additional packages from the comma-separated list LIST",
+            metavar="LIST")
+
+    parser.add_option("--prefix", dest="prefix",
+            help="Prefix output filenames with PREFIX", metavar="PREFIX")
+
+    parser.add_option("--scale", dest="scale",
+            help="Scale output by a factor of SCALE. 1 = 100%%", metavar="SCALE")
+
+    parser.add_option("--preamble", dest="preamble",
+            help="Load additional preamble from FILE", metavar="FILE")
+
+    (options, args) = parser.parse_args(args=argv)
     try:
         shortopts = [ 'h', ]
         longopts = [
