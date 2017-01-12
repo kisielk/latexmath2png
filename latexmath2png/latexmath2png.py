@@ -1,5 +1,5 @@
 #!/usr/bin/env python2.5
-from __future__ import with_statement # Until Python 2.6
+from __future__ import with_statement  # Until Python 2.6
 from optparse import OptionParser
 """
 Converts LaTeX math to png images.
@@ -50,11 +50,12 @@ import getopt
 
 # Default packages to use when generating output
 default_packages = [
-        'amsmath',
-        'amsthm',
-        'amssymb',
-        'bm'
-        ]
+    'amsmath',
+    'amsthm',
+    'amssymb',
+    'bm'
+]
+
 
 def __build_preamble(packages):
     preamble = '\documentclass{article}\n'
@@ -63,11 +64,12 @@ def __build_preamble(packages):
     preamble += "\pagestyle{empty}\n\\begin{document}\n"
     return preamble
 
-def __write_output(infile, outdir, workdir = '.', prefix = '', size = 1):
+
+def __write_output(infile, outdir, workdir='.', prefix='', size=1):
     try:
         # Generate the DVI file
         latexcmd = 'latex -halt-on-error -output-directory %s %s'\
-                % (workdir, infile)
+            % (workdir, infile)
         rc = os.system(latexcmd)
         # Something bad happened, abort
         if rc != 0:
@@ -77,21 +79,21 @@ def __write_output(infile, outdir, workdir = '.', prefix = '', size = 1):
         dvifile = infile.replace('.tex', '.dvi')
         outprefix = os.path.join(outdir, prefix)
         dvicmd = "dvipng -T tight -x %i -z 9 -bg Transparent "\
-                "-o %s%%d.png %s" % (size * 1000, outprefix, dvifile)
+            "-o %s%%d.png %s" % (size * 1000, outprefix, dvifile)
         rc = os.system(dvicmd)
         if rc != 0:
             raise Exception('dvipng error')
     finally:
         # Cleanup temporaries
         basefile = infile.replace('.tex', '')
-        tempext = [ '.aux', '.dvi', '.log' ]
+        tempext = ['.aux', '.dvi', '.log']
         for te in tempext:
             tempfile = basefile + te
             if os.path.exists(tempfile):
                 os.remove(tempfile)
 
 
-def math2png(eqs, outdir, packages = default_packages, prefix = '', size = 1):
+def math2png(eqs, outdir, packages=default_packages, prefix='', size=1):
     """
     Generate png images from $...$ style math environment equations.
 
@@ -121,6 +123,7 @@ def math2png(eqs, outdir, packages = default_packages, prefix = '', size = 1):
         if os.path.exists(texfile):
             os.remove(texfile)
 
+
 def usage():
     print """
 Usage: %s [OPTION] ... [FILE] ...
@@ -142,6 +145,7 @@ equation is allowed per line of text and each equation is rendered to a separate
 PNG image numbered sequentially from 1, with an optional prefix.
     """ % (os.path.split(sys.argv[0])[1])
 
+
 def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
@@ -149,30 +153,30 @@ def main(argv=None):
     parser = Optionparser()
 
     parser.add_option("-o", "--outdir", dest="outdir",
-            help="Write output PNG files to DIR", metavar="DIR")
+                      help="Write output PNG files to DIR", metavar="DIR")
 
     parser.add_option("-p", "--packages", dest="packages",
-            help="Include additional packages from the comma-separated list LIST",
-            metavar="LIST")
+                      help="Include additional packages from the comma-separated list LIST",
+                      metavar="LIST")
 
     parser.add_option("--prefix", dest="prefix",
-            help="Prefix output filenames with PREFIX", metavar="PREFIX")
+                      help="Prefix output filenames with PREFIX", metavar="PREFIX")
 
     parser.add_option("--scale", dest="scale",
-            help="Scale output by a factor of SCALE. 1 = 100%%", metavar="SCALE")
+                      help="Scale output by a factor of SCALE. 1 = 100%%", metavar="SCALE")
 
     parser.add_option("--preamble", dest="preamble",
-            help="Load additional preamble from FILE", metavar="FILE")
+                      help="Load additional preamble from FILE", metavar="FILE")
 
     (options, args) = parser.parse_args(args=argv)
     try:
-        shortopts = [ 'h', ]
+        shortopts = ['h', ]
         longopts = [
-                'help',
-                'outdir=',
-                'packages=',
-                'prefix=',
-                ]
+            'help',
+            'outdir=',
+            'packages=',
+            'prefix=',
+        ]
         opts, args = getopt.getopt(sys.argv[1:], shortopts, longopts)
     except getopt.GetoptError, err:
         scriptname = os.path.split(sys.argv[0])[1]
